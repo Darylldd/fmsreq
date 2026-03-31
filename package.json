@@ -1,0 +1,22 @@
+{
+  "name": "fms",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "dependencies": {
+    "@nuxt/content": "^3.12.0",
+    "@vueuse/core": "^14.2.1",
+    "firebase": "^12.11.0",
+    "nuxt": "^4.4.2"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8"
+  }
+}
