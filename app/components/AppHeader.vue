@@ -2,7 +2,7 @@
   <header class="bg-primary-900 text-white shadow-lg">
     <div class="container mx-auto px-4 max-w-7xl">
       <div class="flex items-center justify-between h-16">
-        <!-- Logo / Title -->
+
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 bg-white/20 rounded-lg flex items-center justify-center">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -11,7 +11,8 @@
             </svg>
           </div>
           <div>
-            <h1 class="font-bold text-sm leading-tight">BFAR File Management</h1>
+                <NuxtLink to="/dashboard">
+            <h1 class="font-bold text-sm leading-tight">BFAR File Management</h1></Nuxtlink>
             <p class="text-primary-200 text-xs">Bureau of Fisheries</p>
           </div>
         </div>

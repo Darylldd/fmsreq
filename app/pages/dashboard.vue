@@ -24,7 +24,7 @@
             </svg>
           </div>
           <div>
-            <p class="text-2xl font-bold text-gray-900">—</p>
+            <p class="text-2xl font-bold text-gray-900">{{ folders.length }}</p> 
             <p class="text-sm text-gray-500">Total Folders</p>
           </div>
         </div>
@@ -39,7 +39,7 @@
             </svg>
           </div>
           <div>
-            <p class="text-2xl font-bold text-gray-900">—</p>
+            <p class="text-2xl font-bold text-gray-900">{{ totalFiles }}</p> 
             <p class="text-sm text-gray-500">Total Files</p>
           </div>
         </div>
@@ -74,23 +74,30 @@
           <span class="text-sm font-medium text-gray-700">Browse Folders</span>
         </NuxtLink>
 
-        <NuxtLink to="/search"
-          class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-green-400 hover:bg-green-50 transition cursor-pointer">
-          <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-          <span class="text-sm font-medium text-gray-700">Search Files</span>
-        </NuxtLink>
+    <NuxtLink to="/search"
+  class="flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-dashed border-gray-200 hover:border-green-400 hover:bg-green-50 transition">
+  <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+  <span class="text-sm font-medium text-gray-700">Search Files</span>
+</NuxtLink>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  middleware: 'auth',
-})
+definePageMeta({ middleware: 'auth' })
 
-const { user, userRole, isORD } = useAuth()
+const { user, userRole } = useAuth()
+const { folders, fetchFolders } = useFolders()
+const { files, fetchFiles } = useFiles()
+const { db } = useFirebase()
+const { getDocs, collection } = await import('firebase/firestore')
+
+// Get total counts
+await fetchFolders()
+const allFilesSnap = await getDocs(collection(db, 'files'))
+const totalFiles = allFilesSnap.size
 </script>

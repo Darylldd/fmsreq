@@ -3,13 +3,16 @@ export default defineNuxtRouteMiddleware((to) => {
 
   if (import.meta.server) return
 
-  const publicRoutes = ['/login']
+  const publicRoutes = ['/login', '/register']
 
-  if (!loading.value && !isLoggedIn.value && !publicRoutes.includes(to.path)) {
+  // Wait for auth to finish loading
+  if (loading.value) return
+
+  if (!isLoggedIn.value && !publicRoutes.includes(to.path)) {
     return navigateTo('/login')
   }
 
-  if (!loading.value && isLoggedIn.value && to.path === '/login') {
+  if (isLoggedIn.value && publicRoutes.includes(to.path)) {
     return navigateTo('/dashboard')
   }
 })

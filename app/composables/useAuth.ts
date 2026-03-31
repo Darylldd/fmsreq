@@ -11,9 +11,14 @@ export const useAuth = () => {
   const user = useState<User | null>('auth.user', () => null)
   const userRole = useState<string | null>('auth.role', () => null)
   const loading = useState<boolean>('auth.loading', () => true)
+  const authReady = useState<boolean>('auth.ready', () => false)
 
   const initAuth = () => {
+    // Don't re-initialize if already done
+    if (authReady.value) return Promise.resolve(user.value)
+
     const { auth, db } = useFirebase()
+
     return new Promise((resolve) => {
       onAuthStateChanged(auth, async (firebaseUser) => {
         if (firebaseUser) {
@@ -31,6 +36,7 @@ export const useAuth = () => {
           userRole.value = null
         }
         loading.value = false
+        authReady.value = true
         resolve(firebaseUser)
       })
     })
@@ -78,6 +84,7 @@ export const useAuth = () => {
     await signOut(auth)
     user.value = null
     userRole.value = null
+    authReady.value = false
     await navigateTo('/login')
   }
 
@@ -101,6 +108,7 @@ export const useAuth = () => {
     user,
     userRole,
     loading,
+    authReady,
     isLoggedIn,
     isORD,
     initAuth,
