@@ -167,14 +167,100 @@ const formattedDate = computed(() => {
   })
 })
 
-const printFile = () => window.print()
+const printFile = () => {
+  if (!file.value) return
+
+  const content = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>${file.value.name} - BFAR File Management</title>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; padding: 40px; color: #111; }
+        .header { border-bottom: 2px solid #1e3a8a; padding-bottom: 16px; margin-bottom: 24px; }
+        .header h1 { font-size: 20px; color: #1e3a8a; }
+        .header p { font-size: 12px; color: #666; margin-top: 4px; }
+        .title-section { background: #1e3a8a; color: white; padding: 20px; border-radius: 8px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .title-section h2 { font-size: 22px; }
+        .folder-label { font-size: 11px; color: #93c5fd; margin-bottom: 4px; }
+        .year-badge { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+        .field { border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; }
+        .field-label { font-size: 10px; font-weight: bold; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .field-value { font-size: 14px; color: #111; }
+        .description { grid-column: 1 / -1; }
+        .file-url { font-size: 10px; color: #666; word-break: break-all; margin-top: 4px; }
+        .footer { margin-top: 40px; padding-top: 12px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; text-align: center; }
+        .print-date { font-size: 11px; color: #9ca3af; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>BFAR File Management System</h1>
+        <p>Bureau of Fisheries and Aquatic Resources</p>
+        <p class="print-date">Printed on: ${new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+      </div>
+
+      <div class="title-section">
+        <div>
+          <p class="folder-label">📁 ${folderName.value}</p>
+          <h2>${file.value.name}</h2>
+        </div>
+        <span class="year-badge">${file.value.year}</span>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <p class="field-label">File Name</p>
+          <p class="field-value">${file.value.name}</p>
+        </div>
+        <div class="field">
+          <p class="field-label">Year</p>
+          <p class="field-value">${file.value.year}</p>
+        </div>
+        <div class="field">
+          <p class="field-label">Folder</p>
+          <p class="field-value">${folderName.value}</p>
+        </div>
+        <div class="field">
+          <p class="field-label">Date Added</p>
+          <p class="field-value">${formattedDate.value}</p>
+        </div>
+        <div class="field">
+          <p class="field-label">Added By</p>
+          <p class="field-value">${file.value.createdByEmail}</p>
+        </div>
+        <div class="field">
+          <p class="field-label">Attached Document</p>
+          <p class="field-value">${file.value.fileName || 'No document attached'}</p>
+          ${file.value.fileUrl ? `<p class="file-url">${file.value.fileUrl}</p>` : ''}
+        </div>
+        <div class="field description">
+          <p class="field-label">Description</p>
+          <p class="field-value">${file.value.description || 'No description provided.'}</p>
+        </div>
+      </div>
+
+      <div class="footer">
+        This document was generated from the BFAR File Management System
+      </div>
+    </body>
+    </html>
+  `
+
+  const printWindow = window.open('', '_blank', 'width=800,height=600')
+  if (!printWindow) {
+    alert('Please allow popups for this site to enable printing.')
+    return
+  }
+  printWindow.document.write(content)
+  printWindow.document.close()
+  printWindow.focus()
+  setTimeout(() => {
+    printWindow.print()
+    printWindow.close()
+  }, 500)
+}
 </script>
 
-<style>
-@media print {
-  /* Hide everything except the print area */
-  body * { visibility: hidden; }
-  #print-area, #print-area * { visibility: visible; }
-  #print-area { position: absolute; left: 0; top: 0; width: 100%; }
-}
-</style>
